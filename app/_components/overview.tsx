@@ -38,7 +38,7 @@ const Overview = () => {
     }
 
     return (
-        <Card>
+        <Card className="mt-[69px]">
             <CardHeader onClick={openView} className={`${viewContent ? "" : "cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-all"}`}>
                 <CardTitle>Overview</CardTitle>
                 <CardDescription>

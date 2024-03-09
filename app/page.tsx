@@ -4,11 +4,13 @@ import WebsiteName from "./_components/website-name";
 import Overview from "./_components/overview";
 import CreateTransaction from "./_components/create-transaction";
 import Categories from "./_components/categories";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserProfile from "./_components/user-profile";
 
 export default function Home() {
     return (
         <div className="max-w-screen-xl h-screen px-10 gap-10 grid grid-cols-3 mx-auto">
-            <div>
+            <div className="relative">
                 <WebsiteName />
                 <Overview />
                 <CreateTransaction />
@@ -20,7 +22,9 @@ export default function Home() {
                     <TransactonList />
                 </div>
             </div>
-            <div>lalaal</div>
+            <div className="relative">
+                <UserProfile />
+            </div>
         </div>
     );
 }
