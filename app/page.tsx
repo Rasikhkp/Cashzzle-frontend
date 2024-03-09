@@ -6,6 +6,7 @@ import CreateTransaction from "./_components/create-transaction";
 import Categories from "./_components/categories";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserProfile from "./_components/user-profile";
+import Statistics from "./_components/statistics";
 
 export default function Home() {
     return (
@@ -24,6 +25,7 @@ export default function Home() {
             </div>
             <div className="relative">
                 <UserProfile />
+                <Statistics />
             </div>
         </div>
     );
