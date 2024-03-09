@@ -40,7 +40,7 @@ const CreateTransaction = () => {
         resolver: zodResolver(createTransactionSchema),
     });
 
-    const onSubmit = () => {};
+    const onSubmit = () => { };
 
     return (
         <Card className="mt-6">
@@ -132,13 +132,18 @@ const CreateTransaction = () => {
                                 <Label htmlFor="r3">Income</Label>
                             </div>
                         </RadioGroup>
+
+                        <div className="pt-6 flex gap-4 w-full">
+                            <Button variant="outline" className="w-full">
+                                Clear
+                            </Button>
+                            <Button className="w-full">
+                                Create
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </CardContent>
-            <CardFooter className="grid grid-cols-2 gap-3">
-                <Button variant="outline">Clear</Button>
-                <Button>Create</Button>
-            </CardFooter>
         </Card>
     );
 };

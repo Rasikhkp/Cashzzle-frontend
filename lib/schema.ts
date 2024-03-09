@@ -7,4 +7,10 @@ export const createTransactionSchema = z.object({
     category: z.string().min(1),
 });
 
+export const createCategoriesSchema = z.object({
+    name: z.string().min(1),
+    icon: z.string().min(1),
+});
+
 export type TCreateTransactionSchema = z.infer<typeof createTransactionSchema>;
+export type TCreateCategoriesSchema = z.infer<typeof createCategoriesSchema>;
