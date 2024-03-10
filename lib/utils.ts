@@ -5,12 +5,14 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
 
-export const randomizeColor = () => {
-    const red = Math.floor(Math.random() * 256);
-    const green = Math.floor(Math.random() * 256);
-    const blue = Math.floor(Math.random() * 256);
+export const randomizeColor = () => "#" + Math.floor(Math.random() * 16777215).toString(16)
 
-    const color = `rgb(${red},${green},${blue})`;
+export const randomizeNumber = (below: number, upper: number) => Math.floor(Math.random() * (upper - below + 1)) + below
 
-    return color;
-}
+export const formatToRupiah = (amount: number) => {
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    }).format(amount);
+};

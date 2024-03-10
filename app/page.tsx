@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserProfile from "./_components/user-profile";
 import Statistics from "./_components/statistics";
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
     return (
         <div className="max-w-screen-xl h-screen px-10 gap-10 grid grid-cols-3 mx-auto">

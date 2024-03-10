@@ -1,8 +1,10 @@
 "use client"
+
 import React from 'react'
 import { ResponsivePie } from "@nivo/pie"
+import { formatToRupiah } from '@/lib/utils'
 
-const Pie = ({ data, label, className }: any) => {
+const ChartPie = ({ data, label, className }: any) => {
     return (
         <div className={`${className} w-full text-xs aspect-square border border-border rounded-xl`}>
             <div className='text-xs text-muted-foreground text-center mt-1'>{label}</div>
@@ -10,10 +12,14 @@ const Pie = ({ data, label, className }: any) => {
                 data={data}
                 margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 innerRadius={0.5}
+                colors={{
+                    "scheme": "pastel1"
+                }}
                 padAngle={0.7}
                 cornerRadius={3}
                 activeOuterRadiusOffset={8}
                 borderWidth={1}
+                valueFormat={(value: any) => formatToRupiah(value)}
                 borderColor={{
                     from: 'color',
                     modifiers: [
@@ -24,6 +30,7 @@ const Pie = ({ data, label, className }: any) => {
                     ]
                 }}
                 enableArcLinkLabels={false}
+                enableArcLabels={false}
                 defs={[
                     {
                         id: 'dots',
@@ -75,4 +82,4 @@ const Pie = ({ data, label, className }: any) => {
     )
 }
 
-export default Pie
+export default ChartPie

@@ -1,28 +1,32 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import Pie from "./pie"
+import ChartPie from "./chart-pie"
 import { Progress } from '@/components/ui/progress'
-import { randomizeColor } from '@/lib/utils'
+import { randomizeColor, randomizeNumber } from '@/lib/utils'
 import React from 'react'
+import ChartLine from './chart-line'
+import { Menubar, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar'
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { randomInt } from 'crypto'
 
 const spending = [
     {
         id: "belanja",
         label: "belanja",
-        value: 40,
+        value: 300000,
         color: randomizeColor()
     },
     {
         id: "main",
         label: "main",
-        value: 30,
+        value: 300000,
         color: randomizeColor()
     },
     {
         id: "entertainment",
-        labek: "entertainment",
-        value: 100,
+        label: "entertainment",
+        value: 300000,
         color: randomizeColor()
     }
 ]
@@ -31,14 +35,41 @@ const income = [
     {
         id: "brc",
         label: "brc",
-        value: 30,
+        value: 300000,
         color: randomizeColor()
     },
     {
         id: "orang tua",
         label: "orang tua",
-        value: 50,
+        value: 300000,
         color: randomizeColor()
+    }
+]
+
+const line = [
+    {
+        id: "balance",
+        color: '#240A34',
+        data: Array.from({ length: 30 }, (_, i) => ({
+            x: i + 1,
+            y: randomizeNumber(500000, 1000000)
+        }))
+    },
+    {
+        id: "income",
+        color: '#891652',
+        data: Array.from({ length: 30 }, (_, i) => ({
+            x: i + 1,
+            y: randomizeNumber(20000, 60000)
+        }))
+    },
+    {
+        id: "spending",
+        color: "#EABE6C",
+        data: Array.from({ length: 30 }, (_, i) => ({
+            x: i + 1,
+            y: randomizeNumber(30000, 100000)
+        }))
     }
 ]
 
@@ -57,9 +88,33 @@ const Statistics = () => {
 
                 <div className="text-sm my-5 font-medium">Spending and income by category</div>
                 <div className='flex gap-3'>
-                    <Pie data={spending} label="Spending" />
-                    <Pie data={income} label="Income" />
+                    <ChartPie data={spending} label="Spending" />
+                    <ChartPie data={income} label="Income" />
                 </div>
+
+                <div className="text-sm my-5 font-medium">Balance, Spending, and income</div>
+                <div className='flex justify-between my-3'>
+                    <Menubar className="w-fit">
+                        <MenubarMenu>
+                            <MenubarTrigger className='hover:bg-accent transition-all duration-300'>Weekly</MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                            <MenubarTrigger className='hover:bg-accent transition-all duration-300'>Monthly</MenubarTrigger>
+                        </MenubarMenu>
+                    </Menubar>
+
+                    <Menubar className="w-fit">
+                        <MenubarMenu>
+                            <MenubarTrigger className='hover:bg-accent transition-all duration-300'><ChevronLeftIcon /></MenubarTrigger>
+                        </MenubarMenu>
+                        <div className='text-xs font-medium'>21 - 28</div>
+                        <MenubarMenu>
+                            <MenubarTrigger className='hover:bg-accent transition-all duration-300'><ChevronRightIcon /></MenubarTrigger>
+                        </MenubarMenu>
+                    </Menubar>
+                </div>
+
+                <ChartLine data={line} />
 
 
             </CardContent>
