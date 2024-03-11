@@ -17,6 +17,7 @@ import {
 import React, { MouseEvent, useState } from "react";
 import OverviewInfo from "./overview-info";
 import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Overview = () => {
     const [edit, setEdit] = useState(false);
@@ -46,14 +47,35 @@ const Overview = () => {
                 </CardDescription>
             </CardHeader>
 
-            {viewContent && (
-                <CardContent className="grid grid-cols-2 gap-4">
-                    <OverviewInfo amount={1000000} name="Balance" />
-                    <OverviewInfo amount={300000} name="Income" />
-                    <OverviewInfo amount={400000} name="Spending" />
-                    <OverviewInfo amount={500000} name="Spending Limit" />
-                </CardContent>
-            )}
+            <AnimatePresence>
+                {viewContent && (
+                    <motion.div
+                        className="overflow-clip"
+                        initial={{ height: 0 }}
+                        animate={{
+                            height: "",
+                            transition: {
+                                type: "spring"
+                            }
+                        }}
+                        exit={{
+                            height: 0,
+                            transition: {
+                                type: "easeOut",
+                                duration: .1
+                            }
+                        }}
+                        transition={{ type: "spring" }}
+                    >
+                        <CardContent className="grid grid-cols-2 gap-4">
+                            <OverviewInfo amount={1000000} name="Balance" />
+                            <OverviewInfo amount={300000} name="Income" />
+                            <OverviewInfo amount={400000} name="Spending" />
+                            <OverviewInfo amount={500000} name="Spending Limit" />
+                        </CardContent>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {viewContent && (
                 <div className="w-full flex justify-center">
