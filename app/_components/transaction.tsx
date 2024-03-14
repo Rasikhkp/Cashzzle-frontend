@@ -1,15 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
     EllipsisVerticalIcon,
     PencilIcon,
-    PencilSquareIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import food from "@/public/food.svg";
-import { useEffect, useState } from "react";
+import food from "@/public/icons/food.svg";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Transaction = () => {

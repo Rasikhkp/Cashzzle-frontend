@@ -6,9 +6,8 @@ import { Progress } from '@/components/ui/progress'
 import { randomizeColor, randomizeNumber } from '@/lib/utils'
 import React, { useState } from 'react'
 import ChartLine from './chart-line'
-import { Menubar, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar'
+import { Menubar, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar'
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import { randomInt } from 'crypto'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ChevronDoubleUpIcon } from '@heroicons/react/24/outline'
@@ -136,13 +135,13 @@ const Statistics = () => {
                                 </Menubar>
 
                                 <Menubar className="w-fit">
-                                    <MenubarMenu>
-                                        <MenubarTrigger className='hover:bg-accent transition-all duration-300'><ChevronLeftIcon /></MenubarTrigger>
-                                    </MenubarMenu>
-                                    <div className='text-xs font-medium'>21 - 28</div>
-                                    <MenubarMenu>
-                                        <MenubarTrigger className='hover:bg-accent transition-all duration-300'><ChevronRightIcon /></MenubarTrigger>
-                                    </MenubarMenu>
+                                    <button className='p-1 hover:bg-accent rounded-sm'>
+                                        <ChevronLeftIcon />
+                                    </button>
+                                    <div className='text-xs font-medium px-2'>21 - 28</div>
+                                    <button className='p-1 hover:bg-accent rounded-sm'>
+                                        <ChevronRightIcon />
+                                    </button>
                                 </Menubar>
                             </div>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { poppins } from "./fonts";
+import ReduxProvider from "@/redux/ReduxProvider";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -13,7 +14,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${poppins.className}`}>{children}</body>
+            <body className={`${poppins.className}`}>
+                <ReduxProvider>
+                    {children}
+                </ReduxProvider>
+            </body>
         </html>
     );
 }
