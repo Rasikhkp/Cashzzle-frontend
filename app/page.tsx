@@ -4,7 +4,6 @@ import WebsiteName from "./_components/website-name";
 import Overview from "./_components/overview";
 import CreateTransaction from "./_components/create-transaction";
 import Categories from "./_components/categories";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserProfile from "./_components/user-profile";
 import Statistics from "./_components/statistics";
 
@@ -12,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 export default function Home() {
     return (
-        <div className="max-w-screen-xl h-screen px-10 gap-10 grid grid-cols-3 mx-auto">
+        <div className="max-w-screen-xl overflow-y-scroll h-screen px-10 gap-10 grid grid-cols-3 mx-auto">
             <div className="relative">
                 <WebsiteName />
                 <Overview />

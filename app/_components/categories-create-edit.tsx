@@ -23,11 +23,13 @@ import food from "@/public/icons/food.svg"
 import { addToLS, updateLS } from "@/lib/utils";
 import { nanoid } from "nanoid"
 import { useEffect, useRef } from "react";
+import useConfirm from "@/hooks/useConfirm";
 
 
 const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "create" | "update"; className?: string; setOpen?: any; data?: any }) => {
     const dispatch = useDispatch()
     const categoryCreateEditRef = useRef<HTMLDivElement>(null)
+    const [Dialog, confirm] = useConfirm('Are you sure?', 'Editing this category will change the category for associated transactions.')
 
     useEffect(() => {
         document.addEventListener("click", (e) => {
@@ -46,6 +48,10 @@ const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "creat
     })
 
     const onSubmit = async (values: TCreateCategoriesSchema) => {
+        const ans = await confirm()
+
+        if (!ans) return
+
         if (type === "create") {
             const newData = { ...values, id: nanoid() }
 
@@ -62,67 +68,62 @@ const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "creat
     }
 
     return (
-        <div className="z-20" ref={categoryCreateEditRef}>
-            <Toaster />
-            <Card className={`${className} pt-6 w-fit`}>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <div className="flex gap-4">
+        <>
+            <Dialog />
+            <div className="z-20" ref={categoryCreateEditRef}>
+                <Toaster />
+                <Card className={`${className} pt-6 w-fit`}>
+                    <CardContent>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                                <div className="flex gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Belanja"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage className="text-start" />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <CategoriesChooseIcon setValue={form.setValue} />
+                                </div>
+
                                 <FormField
                                     control={form.control}
-                                    name="name"
+                                    name="icon"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Belanja"
+                                                    type="hidden"
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage className="text-start" />
                                         </FormItem>
                                     )}
                                 />
 
-                                <CategoriesChooseIcon setValue={form.setValue} />
-                            </div>
-
-                            <FormField
-                                control={form.control}
-                                name="icon"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                type="hidden"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className="flex gap-3 w-60 mt-3">
-                                {type !== "create" ? (
-                                    <Button className="w-full" variant={"destructive"} onClick={() => setOpen(false)} type="button">
-                                        Cancel
-                                    </Button>
-                                ) : null}
-
                                 <Button
-                                    className="w-full"
+                                    className="w-60 mt-3"
                                 >
                                     {type === "create" ? "Create" : "Update"}
                                 </Button>
-                            </div>
 
 
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            </div>
+        </>
     )
 }
 
