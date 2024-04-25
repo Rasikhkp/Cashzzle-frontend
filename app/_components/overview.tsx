@@ -4,39 +4,39 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import {
     ChevronDoubleUpIcon,
-    PencilSquareIcon,
-    TrashIcon,
-    XMarkIcon,
 } from "@heroicons/react/24/outline";
-import React, { MouseEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 import OverviewInfo from "./overview-info";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { getBalance, getIncome, getSpending, getSpendingLimit } from "@/redux/store";
+import { getFromLS } from "@/lib/utils";
+import { setSpendingLimit } from "@/redux/features/spending-limit-slice";
 
 const Overview = () => {
-    const [edit, setEdit] = useState(false);
     const [viewContent, setViewContent] = useState(true)
-
-    const openEdit = () => {
-        setEdit(true);
-    };
-
-    const closeEdit = (e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation();
-        setEdit(false);
-    };
+    const balance = useSelector(getBalance)
+    const income = useSelector(getIncome)
+    const spending = useSelector(getSpending)
+    const spendingLimit = useSelector(getSpendingLimit)
+    const dispatch = useDispatch()
 
     const openView = () => {
         if (!viewContent) {
             setViewContent(true)
         }
     }
+
+    useEffect(() => {
+        const spendingLimit = getFromLS('spending limit')
+        dispatch(setSpendingLimit(spendingLimit))
+    }, [])
 
     return (
         <Card className="mt-[69px]">
@@ -55,7 +55,8 @@ const Overview = () => {
                         animate={{
                             height: "",
                             transition: {
-                                type: "spring"
+                                type: "spring",
+                                duration: .3
                             }
                         }}
                         exit={{
@@ -68,10 +69,10 @@ const Overview = () => {
                         transition={{ type: "spring" }}
                     >
                         <CardContent className="grid grid-cols-2 gap-4">
-                            <OverviewInfo amount={1000000} name="Balance" />
-                            <OverviewInfo amount={300000} name="Income" />
-                            <OverviewInfo amount={400000} name="Spending" />
-                            <OverviewInfo amount={500000} name="Spending Limit" />
+                            <OverviewInfo amount={balance} name="Balance" />
+                            <OverviewInfo amount={income} name="Income" />
+                            <OverviewInfo amount={spending} name="Spending" />
+                            <OverviewInfo amount={spendingLimit} name="Spending Limit" />
                         </CardContent>
                     </motion.div>
                 )}

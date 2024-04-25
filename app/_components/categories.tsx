@@ -60,6 +60,7 @@ const Categories = () => {
                             overflow: "visible",
                             transition: {
                                 type: "spring",
+                                duration: .3,
                                 overflow: {
                                     delay: .5
                                 }

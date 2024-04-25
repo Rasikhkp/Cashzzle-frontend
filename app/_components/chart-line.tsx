@@ -3,16 +3,17 @@
 import { formatToRupiah } from '@/lib/utils'
 import { ResponsiveLine } from '@nivo/line'
 
-const ChartLine = ({ data }: any) => {
+const ChartLine = ({ data, month }: { data: any, month?: string }) => {
     return (
         <div className='w-full text-xs aspect-square'>
+            <div className='text-xs text-muted-foreground text-center mt-1'>{month}</div>
             <ResponsiveLine
                 data={data}
                 enableSlices={"x"}
                 colors={{
                     "scheme": "pastel1"
                 }}
-                curve='cardinal'
+                curve='basis'
                 margin={{ top: 10, right: 5, bottom: 60, left: 5 }}
                 xScale={{ type: 'point' }}
                 yScale={{
@@ -26,7 +27,7 @@ const ChartLine = ({ data }: any) => {
                 axisTop={null}
                 axisRight={null}
                 axisBottom={{
-                    tickRotation: 90
+                    tickRotation: !month ? 90 : 0
                 }}
                 axisLeft={null}
                 enablePoints={false}

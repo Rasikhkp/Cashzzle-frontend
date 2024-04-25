@@ -16,9 +16,8 @@ import { TCreateCategoriesSchema, createCategoriesSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategoriesChooseIcon from "./categories-choose-icon";
 import { insertToCategory } from "@/actions/category";
-import { Toaster, toast } from "sonner";
 import { useDispatch } from "react-redux";
-import { addToCategories, updateCategory } from "@/redux/features/categories-slice";
+import { addCategory, updateCategory } from "@/redux/features/categories-slice";
 import food from "@/public/icons/food.svg"
 import { addToLS, updateLS } from "@/lib/utils";
 import { nanoid } from "nanoid"
@@ -48,18 +47,18 @@ const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "creat
     })
 
     const onSubmit = async (values: TCreateCategoriesSchema) => {
-        const ans = await confirm()
-
-        if (!ans) return
-
         if (type === "create") {
             const newData = { ...values, id: nanoid() }
 
-            dispatch(addToCategories(newData))
+            dispatch(addCategory(newData))
             addToLS("categories", newData)
 
             form.reset()
         } else {
+            const ans = await confirm()
+
+            if (!ans) return
+
             const newData = { ...values, id: data.id }
             dispatch(updateCategory(newData))
             updateLS("categories", newData)
@@ -69,9 +68,9 @@ const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "creat
 
     return (
         <>
+            {/* @ts-ignore */}
             <Dialog />
             <div className="z-20" ref={categoryCreateEditRef}>
-                <Toaster />
                 <Card className={`${className} pt-6 w-fit`}>
                     <CardContent>
                         <Form {...form}>
@@ -116,8 +115,6 @@ const CategoriesCreateEdit = ({ type, className, setOpen, data }: { type: "creat
                                 >
                                     {type === "create" ? "Create" : "Update"}
                                 </Button>
-
-
                             </form>
                         </Form>
                     </CardContent>

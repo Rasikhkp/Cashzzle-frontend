@@ -1,16 +1,19 @@
-import { deleteFromLS } from '@/lib/utils';
+import { deleteFromLS, setLS } from '@/lib/utils';
 import { deleteCategory } from '@/redux/features/categories-slice';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import React, { MouseEvent, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CategoriesCreateEdit from './categories-create-edit';
 import useConfirm from '@/hooks/useConfirm';
+import { getTransactions } from '@/redux/store';
+import { fillTransactions } from '@/redux/features/transactions-slice';
 
 const Category = ({ icon, name, id }: { icon: string; name: string; id: string }) => {
     const [options, setOptions] = useState(false);
     const [edit, setEdit] = useState(false)
     const categoryRef = useRef<HTMLDivElement>(null)
+    const transactions = useSelector(getTransactions)
     const dispatch = useDispatch()
     const [Dialog, confirm] = useConfirm('Are you sure?', 'Proceeding will leave the transactions with this category uncategorized.')
 
@@ -31,6 +34,17 @@ const Category = ({ icon, name, id }: { icon: string; name: string; id: string }
         setOptions(false)
         deleteFromLS("categories", id)
         dispatch(deleteCategory(id))
+
+        const newTransactionList = transactions.map(transaction => {
+            if (transaction.categoryId === id) {
+                return { ...transaction, categoryId: "" }
+            }
+
+            return transaction
+        })
+
+        setLS('transactions', newTransactionList)
+        dispatch(fillTransactions(newTransactionList))
     }
 
     return (

@@ -36,16 +36,49 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChevronDoubleUpIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
+import { addToLS, getFromLS } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategories } from "@/redux/store";
+import { addTransaction } from "@/redux/features/transactions-slice";
+import { nanoid } from "nanoid";
 
 const CreateTransaction = () => {
     const [viewContent, setViewContent] = useState(true)
+    // const [category, setCategory] = useState(undefined)
+    const categories = useSelector(getCategories)
+    const dispatch = useDispatch()
 
 
     const form = useForm<TCreateTransactionSchema>({
         resolver: zodResolver(createTransactionSchema),
+        defaultValues: {
+            description: "",
+            price: "",
+            category: undefined,
+            type: "spending",
+        }
     });
 
-    const onSubmit = () => { };
+    const onSubmit = (values: TCreateTransactionSchema) => {
+        console.log(values)
+        const data = {
+            id: nanoid(),
+            categoryId: values.category,
+            description: values.description,
+            price: values.price,
+            type: values.type,
+            time: new Date()
+        }
+
+        addToLS("transactions", data)
+        dispatch(addTransaction(data))
+
+        form.reset()
+    };
+
+    const resetField = () => {
+        form.reset()
+    }
 
     const openView = () => {
         if (!viewContent) {
@@ -68,7 +101,8 @@ const CreateTransaction = () => {
                         animate={{
                             height: "",
                             transition: {
-                                type: "spring"
+                                type: "spring",
+                                duration: .3
                             }
                         }}
                         exit={{
@@ -130,20 +164,16 @@ const CreateTransaction = () => {
                                                 <FormItem>
                                                     <FormLabel>Category</FormLabel>
                                                     <FormControl>
-                                                        <Select>
+                                                        <Select onValueChange={field.onChange}>
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Empty..." />
                                                             </SelectTrigger>
                                                             <SelectContent>
-                                                                <SelectItem value="light">
-                                                                    Light
-                                                                </SelectItem>
-                                                                <SelectItem value="dark">
-                                                                    Dark
-                                                                </SelectItem>
-                                                                <SelectItem value="system">
-                                                                    System
-                                                                </SelectItem>
+                                                                {categories.map((c: any) => (
+                                                                    <SelectItem value={c.id}>
+                                                                        {c.name}
+                                                                    </SelectItem>
+                                                                ))}
                                                             </SelectContent>
                                                         </Select>
                                                     </FormControl>
@@ -153,22 +183,42 @@ const CreateTransaction = () => {
                                         />
                                     </div>
 
-                                    <RadioGroup className="flex gap-4 pt-3">
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="spending" id="r1" />
-                                            <Label htmlFor="r2">Spending</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="income" id="r2" />
-                                            <Label htmlFor="r3">Income</Label>
-                                        </div>
-                                    </RadioGroup>
+                                    <FormField
+                                        control={form.control}
+                                        name="type"
+                                        render={({ field }) => (
+                                            <FormItem className="space-y-3">
+                                                <FormLabel>Type</FormLabel>
+                                                <FormControl>
+                                                    <RadioGroup
+                                                        onValueChange={field.onChange}
+                                                        defaultValue="spending"
+                                                        className="flex flex-col space-y-1"
+                                                    >
+                                                        <FormItem className="flex items-center space-x-3 space-y-0">
+                                                            <FormControl>
+                                                                <RadioGroupItem value="spending" />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal">Spending</FormLabel>
+                                                        </FormItem>
+                                                        <FormItem className="flex items-center space-x-3 space-y-0">
+                                                            <FormControl>
+                                                                <RadioGroupItem value="income" />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal">Income</FormLabel>
+                                                        </FormItem>
+                                                    </RadioGroup>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
                                     <div className="pt-6 flex gap-4 w-full">
-                                        <Button variant="outline" className="w-full">
+                                        <Button onClick={resetField} type="button" variant="outline" className="w-full">
                                             Clear
                                         </Button>
-                                        <Button className="w-full">
+                                        <Button type="submit" className="w-full">
                                             Create
                                         </Button>
                                     </div>
