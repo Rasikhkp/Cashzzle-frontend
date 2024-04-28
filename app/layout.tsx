@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { poppins } from "./fonts";
 import ReduxProvider from "@/redux/ReduxProvider";
+import NextTopLoader from 'nextjs-toploader'
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -15,6 +16,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${poppins.className}`}>
+                <NextTopLoader showSpinner={false} />
                 <ReduxProvider>
                     {children}
                 </ReduxProvider>
