@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
+import { poppins } from "../fonts";
 
 const layout = ({
   children,
@@ -16,7 +17,7 @@ const layout = ({
     path.includes("register") || path.includes("reset-password");
 
   return (
-    <div className="flex min-h-screen flex-col justify-between gap-3">
+    <div className={`${poppins.className} flex min-h-screen flex-col justify-between gap-3`}>
       <div className="w-full justify-between items-center py-3 px-6 flex">
         <Link href={"/app"} className="flex gap-3 group hover:underline">
           <ArrowLeftIcon className="w-4 group-hover:-translate-x-2 transition-all" />

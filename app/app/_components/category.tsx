@@ -6,8 +6,9 @@ import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CategoriesCreateEdit from "./categories-create-edit";
 import useConfirm from "@/hooks/useConfirm";
-import { getTransactions } from "@/redux/store";
+import { getTransactions, getUser } from "@/redux/store";
 import { fillTransactions } from "@/redux/features/transactions-slice";
+import { category } from "@/lib/category";
 
 const Category = ({
   icon,
@@ -20,6 +21,7 @@ const Category = ({
 }) => {
   const [options, setOptions] = useState(false);
   const [edit, setEdit] = useState(false);
+  const user = useSelector(getUser)
   const categoryRef = useRef<HTMLDivElement>(null);
   const transactions = useSelector(getTransactions);
   const dispatch = useDispatch();
@@ -46,7 +48,7 @@ const Category = ({
     if (!ans) return;
 
     setOptions(false);
-    deleteFromLS("categories", id);
+    category.delete(user, id)
     dispatch(deleteCategory(id));
 
     const newTransactionList = transactions.map((transaction) => {
@@ -75,9 +77,8 @@ const Category = ({
         <div className="mx-2">{name}</div>
 
         <div
-          className={`${
-            options ? "z-10 opacity-100" : "-z-10 opacity-0"
-          } transition-all duration-300 flex justify-center gap-2 items-center w-full h-full bg-white/30 absolute rounded-lg inset-0 backdrop-blur-sm`}
+          className={`${options ? "z-10 opacity-100" : "-z-10 opacity-0"
+            } transition-all duration-300 flex justify-center gap-2 items-center w-full h-full bg-white/30 absolute rounded-lg inset-0 backdrop-blur-sm`}
         >
           <button
             onClick={() => setEdit(!edit)}

@@ -63,6 +63,30 @@ export const updateLS = (key: string, newData: any) => {
   localStorage.setItem(key, JSON.stringify(updated));
 };
 
+export const upsertLS = (key: string, newData: any) => {
+  let data = getFromLS(key)
+
+  if (!data) {
+    return localStorage.setItem(key, JSON.stringify([newData]))
+  }
+
+  const isExists = data?.some((e: any) => e.date === newData.date)
+
+  if (isExists) {
+    data = data.map((e: any) => {
+      if (e.date === newData.date) {
+        return { ...e, spendingLimit: newData.spendingLimit }
+      } else {
+        return e
+      }
+    })
+  } else {
+    data.push(newData)
+  }
+
+  localStorage.setItem(key, JSON.stringify(data))
+}
+
 export const format12HourTime = (isoDateString: string) => {
   const date = new Date(isoDateString);
   let hours = date.getHours();

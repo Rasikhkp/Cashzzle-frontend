@@ -13,13 +13,15 @@ import { TCreateCategoriesSchema, createCategoriesSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CategoriesChooseIcon from "./categories-choose-icon";
 import { insertToCategory } from "@/actions/category";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addCategory, updateCategory } from "@/redux/features/categories-slice";
 import food from "@/public/icons/food.svg";
 import { addToLS, updateLS } from "@/lib/utils";
 import { nanoid } from "nanoid";
 import { useEffect, useRef } from "react";
 import useConfirm from "@/hooks/useConfirm";
+import { category } from "@/lib/category";
+import { getUser } from "@/redux/store";
 
 const CategoriesCreateEdit = ({
   type,
@@ -33,6 +35,7 @@ const CategoriesCreateEdit = ({
   data?: any;
 }) => {
   const dispatch = useDispatch();
+  const user = useSelector(getUser)
   const categoryCreateEditRef = useRef<HTMLDivElement>(null);
   const [Dialog, confirm] = useConfirm(
     "Are you sure?",
@@ -61,9 +64,10 @@ const CategoriesCreateEdit = ({
   const onSubmit = async (values: TCreateCategoriesSchema) => {
     if (type === "create") {
       const newData = { ...values, id: nanoid() };
+      console.log("new category", newData)
 
+      category.add(user, newData)
       dispatch(addCategory(newData));
-      addToLS("categories", newData);
 
       form.reset();
     } else {
@@ -72,10 +76,12 @@ const CategoriesCreateEdit = ({
       if (!ans) return;
 
       const newData = { ...values, id: data.id };
+      category.update(user, data.id, newData)
       dispatch(updateCategory(newData));
-      updateLS("categories", newData);
       setOpen(false);
     }
+
+    setOpen(false)
   };
 
   return (

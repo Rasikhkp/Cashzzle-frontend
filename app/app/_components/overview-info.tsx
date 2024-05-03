@@ -28,12 +28,11 @@ const OverviewInfo = ({ amount, name }: { amount: number; name: string }) => {
         onClick={() => setOpenOption(true)}
         className="border cursor-pointer hover:bg-gray-100 border-gray-300 rounded-lg relative p-3 overflow-clip"
       >
-        <div className="font-bold">{formatToRupiah(amount)}</div>
+        <div className="font-bold">{formatToRupiah(amount || 0)}</div>
         <div className="text-xs text-gray-400">{name}</div>
         <div
-          className={`${
-            openOption ? "z-10 opacity-100" : "-z-10 opacity-0"
-          } transition-all duration-300 flex justify-center gap-3 items-center w-full h-full bg-white/30 absolute inset-0 backdrop-blur-sm`}
+          className={`${openOption ? "z-10 opacity-100" : "-z-10 opacity-0"
+            } transition-all duration-300 flex justify-center gap-3 items-center w-full h-full bg-white/30 absolute inset-0 backdrop-blur-sm`}
         >
           <button
             onClick={() => setEdit(true)}

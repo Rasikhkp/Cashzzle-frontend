@@ -21,3 +21,10 @@ export type UserType = {
   password: string
   picture?: string
 }
+
+export type SpendingLimitType = {
+  id: string
+  date: string
+  spendingLimit: string
+  userId?: string
+}

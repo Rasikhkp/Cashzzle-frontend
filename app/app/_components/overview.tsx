@@ -15,19 +15,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBalance,
+  getCurrentSpendingLimit,
   getIncome,
   getSpending,
-  getSpendingLimit,
 } from "@/redux/store";
 import { getFromLS } from "@/lib/utils";
-import { setSpendingLimit } from "@/redux/features/spending-limit-slice";
 
 const Overview = () => {
-  const [viewContent, setViewContent] = useState(true);
+  const [viewContent, setViewContent] = useState(false);
   const balance = useSelector(getBalance);
   const income = useSelector(getIncome);
   const spending = useSelector(getSpending);
-  const spendingLimit = useSelector(getSpendingLimit);
+  const spendingLimit = useSelector(getCurrentSpendingLimit);
   const dispatch = useDispatch();
 
   const openView = () => {
@@ -35,12 +34,6 @@ const Overview = () => {
       setViewContent(true);
     }
   };
-
-  useEffect(() => {
-    const spendingLimit = getFromLS("spending limit");
-    dispatch(setSpendingLimit(spendingLimit));
-  }, []);
-
   return (
     <Card className="mt-[69px]">
       <CardHeader
@@ -78,7 +71,7 @@ const Overview = () => {
               <OverviewInfo amount={balance} name="Balance" />
               <OverviewInfo amount={income} name="Income this month" />
               <OverviewInfo amount={spending} name="Spending this month" />
-              <OverviewInfo amount={spendingLimit} name="Spending Limit" />
+              <OverviewInfo amount={Number(spendingLimit!)} name="Spending Limit" />
             </CardContent>
           </motion.div>
         )}

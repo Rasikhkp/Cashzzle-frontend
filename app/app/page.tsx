@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { fillTransactions } from "@/redux/features/transactions-slice";
 import { fillCategories } from "@/redux/features/categories-slice";
 import { setUser } from "@/redux/features/user-slice";
+import { fillSpendingLimits } from "@/redux/features/spending-limit-slice";
 
 const getUser = async () => {
   try {
@@ -57,7 +58,7 @@ const getUserOrRefreshToken = async () => {
   }
 };
 
-const getTransactionsAndCategories = async (urls: string[]) => {
+const getTransactionsCategoriesSpendingLimits = async (urls: string[]) => {
   try {
     const axiosPromises = urls.map(url => axios.get(url, { withCredentials: true }));
 
@@ -69,7 +70,7 @@ const getTransactionsAndCategories = async (urls: string[]) => {
   }
 }
 
-const fillTransactionsAndCategories = async (urls: string[], data: object[]) => {
+const fillTransactionsCategoriesSpendingLimits = async (urls: string[], data: object[]) => {
   console.log("data", data)
   try {
     const axiosPromises = urls.map((url, i) => axios.post(url, data[i], { withCredentials: true }));
@@ -90,6 +91,7 @@ const App = () => {
     const fetchDataAndSetUser = async () => {
       let transactionsFromLS = getFromLS("transactions")
       let categoriesFromLS = getFromLS("categories")
+      let spendingLimitsFromLS = getFromLS("spending-limits")
 
       try {
         const userData = await getUserOrRefreshToken();
@@ -98,43 +100,53 @@ const App = () => {
 
         const urls = [
           'http://localhost:1234/api/transactions?userId=' + userData.message.id,
-          'http://localhost:1234/api/categories'
+          'http://localhost:1234/api/categories',
+          'http://localhost:1234/api/spendingLimits'
         ]
 
-        const responses = await getTransactionsAndCategories(urls) as any
+        const responses = await getTransactionsCategoriesSpendingLimits(urls) as any
         let transactionsData = responses[0].data.message
         let categoriesData = responses[1].data.message
+        let spendingLimitsData = responses[2].data.message
 
         if (!transactionsData[0] && !categoriesData[0]) {
 
           const urls = [
             'http://localhost:1234/api/transactions/fill',
             'http://localhost:1234/api/categories/fill',
+            'http://localhost:1234/api/spendingLimits/fill',
           ]
 
           transactionsFromLS = transactionsFromLS.map((t: any) => ({ ...t, userId: userData.message.id }))
+          spendingLimitsFromLS = spendingLimitsFromLS.map((s: any) => ({ ...s, userId: userData.message.id }))
 
           const data = [
             transactionsFromLS,
-            categoriesFromLS
+            categoriesFromLS,
+            spendingLimitsFromLS
           ]
 
-          const responses = await fillTransactionsAndCategories(urls, data) as any
+          const responses = await fillTransactionsCategoriesSpendingLimits(urls, data) as any
           console.log('filled responses', responses)
 
           transactionsData = responses[0].data.message
           categoriesData = responses[1].data.message
+          spendingLimitsData = responses[2].data.message
         }
 
         dispatch(fillTransactions(transactionsData))
         dispatch(fillCategories(categoriesData))
+        dispatch(fillSpendingLimits(spendingLimitsData))
       } catch (error: any) {
+        console.log(error)
         if (error.response.data === 'Unauthorized') {
+          dispatch(setUser(null))
           dispatch(fillTransactions(transactionsFromLS))
           dispatch(fillCategories(categoriesFromLS))
+          dispatch(fillSpendingLimits(spendingLimitsFromLS))
+        } else {
+          console.log('Error fetching user data:', error);
         }
-
-        console.log('Error fetching user data:', error);
       }
     };
 

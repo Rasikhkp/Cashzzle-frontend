@@ -1,97 +1,18 @@
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import React, { useState } from "react";
 import ChartLine from "./chart-line";
-import { randomizeNumber } from "@/lib/utils";
 import { getMonthDates, getWeekDates, getWeekMonthRange } from "@/lib/date";
 import { useSelector } from "react-redux";
-import { getBalance, getSpending, getTransactions } from "@/redux/store";
+import { getTransactions } from "@/redux/store";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import {
   addMonths,
   addWeeks,
   eachDayOfInterval,
   format,
-  setDate,
   subMonths,
   subWeeks,
 } from "date-fns";
-import { date } from "zod";
-
-type LineChartData = {
-  id: string;
-  data: TransactionData[];
-};
-
-type TransactionData = {
-  x: number;
-  y: number;
-};
-
-const line = [
-  {
-    id: "balance",
-    data: [
-      {
-        x: 1,
-        y: 2,
-      },
-      {
-        x: 2,
-        y: 4,
-      },
-      {
-        x: 3,
-        y: 6,
-      },
-      {
-        x: 4,
-        y: 8,
-      },
-    ],
-  },
-  {
-    id: "income",
-    data: [
-      {
-        x: 1,
-        y: 2,
-      },
-      {
-        x: 2,
-        y: 8,
-      },
-      {
-        x: 3,
-        y: null,
-      },
-      {
-        x: 4,
-        y: null,
-      },
-    ],
-  },
-  {
-    id: "spending",
-    data: [
-      {
-        x: 1,
-        y: 2,
-      },
-      {
-        x: 2,
-        y: 6,
-      },
-      {
-        x: 3,
-        y: 9,
-      },
-      {
-        x: 4,
-        y: 28,
-      },
-    ],
-  },
-];
 
 const StatisticsMoneyFlow = () => {
   const transactions = useSelector(getTransactions);
@@ -99,6 +20,16 @@ const StatisticsMoneyFlow = () => {
   const [dates, setDates] = useState(getWeekDates(new Date()));
 
   const isMonth = () => dates.length > 7;
+
+  const currentMonth = () => {
+    setDates(getMonthDates(new Date()));
+    setDateAnchor(new Date());
+  }
+
+  const currentWeek = () => {
+    setDates(getWeekDates(new Date()));
+    setDateAnchor(new Date());
+  }
 
   const prev = () => {
     if (isMonth()) {
@@ -134,10 +65,10 @@ const StatisticsMoneyFlow = () => {
         y: transactions
           .filter(
             (t) =>
-              format(new Date(t.time), "dd-MM-yyyy") ===
-              format(date, "dd-MM-yyyy"),
+              (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
+              &&
+              t.type === "income",
           )
-          .filter((t) => t.type === "income")
           .map((t) => Number(t.price))
           .reduce((acc, curr) => acc + curr, 0),
       };
@@ -149,10 +80,11 @@ const StatisticsMoneyFlow = () => {
         y: transactions
           .filter(
             (t) =>
-              format(new Date(t.time), "dd-MM-yyyy") ===
-              format(date, "dd-MM-yyyy"),
+              (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
+              &&
+              t.type === "spending"
+
           )
-          .filter((t) => t.type === "spending")
           .map((t) => Number(t.price))
           .reduce((acc, curr) => acc + curr, 0),
       };
@@ -230,7 +162,7 @@ const StatisticsMoneyFlow = () => {
         <Menubar className="w-fit">
           <MenubarMenu>
             <MenubarTrigger
-              onClick={() => setDates(getWeekDates(new Date()))}
+              onClick={currentWeek}
               className="hover:bg-accent transition-all duration-300"
             >
               Weekly
@@ -238,7 +170,7 @@ const StatisticsMoneyFlow = () => {
           </MenubarMenu>
           <MenubarMenu>
             <MenubarTrigger
-              onClick={() => setDates(getMonthDates(new Date()))}
+              onClick={currentMonth}
               className="hover:bg-accent transition-all duration-300"
             >
               Monthly
@@ -252,7 +184,7 @@ const StatisticsMoneyFlow = () => {
           </button>
           <div className="text-xs font-medium px-2">
             {isMonth()
-              ? format(dateAnchor, "MMM, yy")
+              ? format(dates[0], "MMM, yy")
               : `${dates[0].getDate()} - ${dates[6].getDate()}`}
           </div>
           <button onClick={next} className="p-1 hover:bg-accent rounded-sm">

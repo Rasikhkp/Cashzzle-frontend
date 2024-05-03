@@ -40,9 +40,12 @@ import {
   updateTransaction,
 } from "@/redux/features/transactions-slice";
 import { addToLS, setLS, updateLS } from "@/lib/utils";
-import { getCategories } from "@/redux/store";
+import { getCategories, getCurrentDate, getUser } from "@/redux/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setSpendingLimit } from "@/redux/features/spending-limit-slice";
+import { upsertSpendingLimit } from "@/redux/features/spending-limit-slice";
+import { spendingLimit } from "@/lib/spending-limit";
+import { format } from "date-fns";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 const OverviewEdit = ({
   setOpenEdit,
@@ -55,6 +58,8 @@ const OverviewEdit = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
+  const user = useSelector(getUser)
+  const currentDate = useSelector(getCurrentDate)
 
   const form = useForm<TOverviewSchema>({
     resolver: zodResolver(overviewSchema),
@@ -91,8 +96,15 @@ const OverviewEdit = ({
 
         break;
       case "Spending Limit":
-        setLS("spending limit", values.amount);
-        dispatch(setSpendingLimit(Number(values.amount)));
+        const spendingLimitData = {
+          id: nanoid(),
+          date: format(currentDate, 'MM-yy'),
+          spendingLimit: values.amount.toString(),
+          userId: user ? user.id : undefined
+        }
+
+        spendingLimit.upsert(user, spendingLimitData)
+        dispatch(upsertSpendingLimit(spendingLimitData))
 
         break;
     }

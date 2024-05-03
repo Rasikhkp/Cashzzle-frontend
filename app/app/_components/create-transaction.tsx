@@ -42,7 +42,7 @@ import { nanoid } from "nanoid";
 import { transaction } from "@/lib/transaction";
 
 const CreateTransaction = () => {
-  const [viewContent, setViewContent] = useState(true);
+  const [viewContent, setViewContent] = useState(false);
   const categories = useSelector(getCategories);
   const user = useSelector(getUser)
   const dispatch = useDispatch();

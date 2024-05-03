@@ -22,7 +22,7 @@ import Category from "./category";
 
 const Categories = () => {
   const [createCategory, setCreateCategory] = useState(false);
-  const [viewContent, setViewContent] = useState(true);
+  const [viewContent, setViewContent] = useState(false);
   const categories = useSelector(getCategories)
 
   const openView = () => {
@@ -100,10 +100,6 @@ const Categories = () => {
                     icon={category.icon}
                     name={category.name}
                   />
-                  // {/* <div key={index} className="cursor-pointer hover:bg-gray-100 relative overflow-clip rounded-lg border border-gray-500 py-2 px-3 text-xs flex items-center gap-2"> */}
-                  // {/*     <Image src={category.icon} width={24} height={24} alt="food" /> */}
-                  // {/*     {category.name} */}
-                  // {/* </div> */}
                 ))}
               </div>
             </CardContent>
