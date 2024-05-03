@@ -1,137 +1,157 @@
-import React, { useEffect, useRef } from 'react'
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import CreateTransaction from './create-transaction'
-import { useDispatch, useSelector } from 'react-redux'
-import { useForm } from 'react-hook-form'
-import { TCreateTransactionSchema, TOverviewSchema, createTransactionSchema, overviewSchema } from '@/lib/schema'
-import { nanoid } from 'nanoid'
-import { addTransaction, updateTransaction } from '@/redux/features/transactions-slice'
-import { addToLS, setLS, updateLS } from '@/lib/utils'
-import { getCategories } from '@/redux/store';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { setSpendingLimit } from '@/redux/features/spending-limit-slice';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import CreateTransaction from "./create-transaction";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import {
+  TCreateTransactionSchema,
+  TOverviewSchema,
+  createTransactionSchema,
+  overviewSchema,
+} from "@/lib/schema";
+import { nanoid } from "nanoid";
+import {
+  addTransaction,
+  updateTransaction,
+} from "@/redux/features/transactions-slice";
+import { addToLS, setLS, updateLS } from "@/lib/utils";
+import { getCategories } from "@/redux/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { setSpendingLimit } from "@/redux/features/spending-limit-slice";
 
-const OverviewEdit = ({ setOpenEdit, amount, name }: { setOpenEdit: any; amount: number; name: string }) => {
-    const dialogRef = useRef<HTMLDivElement>(null)
-    const dispatch = useDispatch()
+const OverviewEdit = ({
+  setOpenEdit,
+  amount,
+  name,
+}: {
+  setOpenEdit: any;
+  amount: number;
+  name: string;
+}) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
-    const form = useForm<TOverviewSchema>({
-        resolver: zodResolver(overviewSchema),
-        defaultValues: {
-            amount: amount.toString()
-        }
-    });
+  const form = useForm<TOverviewSchema>({
+    resolver: zodResolver(overviewSchema),
+    defaultValues: {
+      amount: amount.toString(),
+    },
+  });
 
-    const onSubmit = (values: TOverviewSchema) => {
-        const newData = {
-            id: nanoid(),
-            categoryId: "",
-            description: "unknown transaction",
-            price: Math.abs(amount - Number(values.amount)).toString(),
-            time: new Date(),
-            type: "" as "spending" | "income"
-        }
-
-        switch (name) {
-            case "Spending":
-                newData.type = "spending"
-
-                break;
-            case "Income":
-                newData.type = "income"
-
-                break;
-            case "Balance":
-                if (Number(values.amount) > Number(amount)) {
-                    newData.type = "income"
-                } else {
-                    newData.type = "spending"
-                }
-
-                break;
-            case "Spending Limit":
-                setLS("spending limit", values.amount)
-                dispatch(setSpendingLimit(Number(values.amount)))
-
-                break;
-        }
-
-        if (name !== "Spending Limit") {
-            addToLS("transactions", newData)
-            dispatch(addTransaction(newData))
-        }
-
-        setOpenEdit(false)
+  const onSubmit = (values: TOverviewSchema) => {
+    const newData = {
+      id: nanoid(),
+      categoryId: "",
+      description: "unknown transaction",
+      price: Math.abs(amount - Number(values.amount)).toString(),
+      time: new Date(),
+      type: "" as "spending" | "income",
     };
 
-    return (
-        <Dialog open={true}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>{name === "Spending Limit" ? "Set Spending Limit" : `Edit ${name}`}</DialogTitle>
-                    <DialogDescription>{name === "Spending Limit" ? "Please enter your desired spending limit for this period" : "Caution: Direct edits may result in unexpected transaction adjustments."}</DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-3"
-                    >
-                        <FormField
-                            control={form.control}
-                            name="amount"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Amount</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type='number'
-                                            placeholder="10000"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+    switch (name) {
+      case "Spending":
+        newData.type = "spending";
 
-                        <div className="pt-6 flex gap-4 w-full">
-                            <Button onClick={() => setOpenEdit(false)} type="button" variant="outline" className="w-full">
-                                Cancel
-                            </Button>
-                            <Button type="submit" className="w-full">
-                                Create
-                            </Button>
-                        </div>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    )
-}
+        break;
+      case "Income":
+        newData.type = "income";
 
-export default OverviewEdit
+        break;
+      case "Balance":
+        if (Number(values.amount) > Number(amount)) {
+          newData.type = "income";
+        } else {
+          newData.type = "spending";
+        }
+
+        break;
+      case "Spending Limit":
+        setLS("spending limit", values.amount);
+        dispatch(setSpendingLimit(Number(values.amount)));
+
+        break;
+    }
+
+    if (name !== "Spending Limit") {
+      addToLS("transactions", newData);
+      dispatch(addTransaction(newData));
+    }
+
+    setOpenEdit(false);
+  };
+
+  return (
+    <Dialog open={true}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            {name === "Spending Limit" ? "Set Spending Limit" : `Edit ${name}`}
+          </DialogTitle>
+          <DialogDescription>
+            {name === "Spending Limit"
+              ? "Please enter your desired spending limit for this period"
+              : "Caution: Direct edits may result in unexpected transaction adjustments."}
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="10000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="pt-6 flex gap-4 w-full">
+              <Button
+                onClick={() => setOpenEdit(false)}
+                type="button"
+                variant="outline"
+                className="w-full"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" className="w-full">
+                Create
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default OverviewEdit;
