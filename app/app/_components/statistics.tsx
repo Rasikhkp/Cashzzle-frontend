@@ -14,6 +14,8 @@ import { ChevronDoubleUpIcon } from "@heroicons/react/24/outline";
 import StatisticsSpendingProgress from "./statistics-spending-progress";
 import StatisticsIncomeSpendingByCategories from "./statistics-income-spending-by-categories";
 import StatisticsMoneyFlow from "./statistics-money-flow";
+import { useSelector } from "react-redux";
+import { getTransactions } from "@/redux/store";
 
 type PieChartData = {
   id: string;
@@ -23,6 +25,8 @@ type PieChartData = {
 
 const Statistics = () => {
   const [open, setOpen] = useState(false);
+  const transactions = useSelector(getTransactions)
+  console.log('transactions di statistics', transactions)
 
   const openView = () => {
     if (!open) {
@@ -64,16 +68,15 @@ const Statistics = () => {
           >
             <CardContent>
               <div className="text-sm font-medium mb-5">Spending progress</div>
+
               <StatisticsSpendingProgress />
 
-              <div className="text-sm my-5 font-medium">
-                Spending and income by category
-              </div>
+              <div className="text-sm my-5 font-medium"> Spending and income by category </div>
+
               <StatisticsIncomeSpendingByCategories />
 
-              <div className="text-sm my-5 font-medium">
-                Balance, Spending, and income
-              </div>
+              <div className="text-sm my-5 font-medium"> Balance, Spending, and income </div>
+
               <StatisticsMoneyFlow />
             </CardContent>
           </motion.div>

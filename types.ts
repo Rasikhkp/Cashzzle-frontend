@@ -12,6 +12,7 @@ export type CategoryType = {
   id: string
   name: string
   icon: string
+  userId?: string
 }
 
 export type UserType = {

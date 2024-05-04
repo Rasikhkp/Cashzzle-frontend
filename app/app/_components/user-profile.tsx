@@ -1,6 +1,8 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { deleteFromLS, getFromLS } from "@/lib/utils";
+import { setUser } from "@/redux/features/user-slice";
 import { getUser } from "@/redux/store";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -8,17 +10,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserProfile = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLButtonElement | null>(null);
+  const dispatch = useDispatch()
   const user = useSelector(getUser)
   console.log("user di user-profile", user)
   const router = useRouter();
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
+    const userString = localStorage.getItem("active-user")
+    dispatch(setUser(userString && JSON.parse(userString)))
 
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
@@ -31,6 +36,8 @@ const UserProfile = () => {
     });
 
     if (success) {
+      localStorage.removeItem("active-user")
+      dispatch(setUser(null))
       router.push("/login");
     } else {
       console.log(message);
@@ -44,7 +51,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="z-10 h-[68.5px] flex items-center justify-end font-bold text-3xl fixed xl:w-[calc(378px)] w-[calc(33%-48px)] fixed bg-white/30 backdrop-blur-sm pr-3">
+    <>
       {user ? (
         <button
           ref={profileRef}
@@ -108,7 +115,7 @@ const UserProfile = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 

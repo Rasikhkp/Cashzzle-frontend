@@ -17,7 +17,7 @@ const page = () => {
       try {
         const {
           data: { success, message },
-        } = await axios.post("http://localhost:1234/api/verify-email", {
+        } = await axios.post("http://localhost:1234/api/auth/verify-email", {
           token: searchParams.get("token"),
         });
 

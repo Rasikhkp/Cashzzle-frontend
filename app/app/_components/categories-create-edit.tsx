@@ -63,7 +63,12 @@ const CategoriesCreateEdit = ({
 
   const onSubmit = async (values: TCreateCategoriesSchema) => {
     if (type === "create") {
-      const newData = { ...values, id: nanoid() };
+      const newData = {
+        ...values,
+        id: nanoid(),
+        userId: user ? user.id : undefined
+      };
+
       console.log("new category", newData)
 
       category.add(user, newData)
@@ -75,7 +80,12 @@ const CategoriesCreateEdit = ({
 
       if (!ans) return;
 
-      const newData = { ...values, id: data.id };
+      const newData = {
+        ...values,
+        id: data.id,
+        userId: user ? user.id : undefined
+      };
+
       category.update(user, data.id, newData)
       dispatch(updateCategory(newData));
       setOpen(false);

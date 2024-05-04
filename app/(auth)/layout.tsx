@@ -2,17 +2,25 @@
 
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { poppins } from "../fonts";
+import { getFromLS } from "@/lib/utils";
 
 const layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-
   const path = usePathname();
+  const router = useRouter()
+  const user = localStorage.getItem('active-user')
+  console.log("user di auth layout", user)
+
+  if (user) {
+    router.push("/app")
+  }
+
   const isRegister = () =>
     path.includes("register") || path.includes("reset-password");
 

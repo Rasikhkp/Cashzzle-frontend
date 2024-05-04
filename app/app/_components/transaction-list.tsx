@@ -11,7 +11,7 @@ const TransactonList = () => {
   console.log('transactions di transaction-list', transactions)
   const currentDate = useSelector(getCurrentDate);
 
-  transactions = transactions.filter(
+  transactions = transactions?.filter(
     (t) =>
       format(new Date(t.time), "MM-yyyy") === format(currentDate, "MM-yyyy"),
   );

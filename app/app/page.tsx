@@ -10,7 +10,7 @@ import UserProfile from "./_components/user-profile";
 import Statistics from "./_components/statistics";
 import axios from "axios";
 import { useEffect } from "react";
-import { getFromLS } from "@/lib/utils";
+import { getFromLS, setLS } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { fillTransactions } from "@/redux/features/transactions-slice";
 import { fillCategories } from "@/redux/features/categories-slice";
@@ -96,6 +96,7 @@ const App = () => {
       try {
         const userData = await getUserOrRefreshToken();
         dispatch(setUser(userData.message))
+        setLS("active-user", userData.message)
         console.log('userData', userData)
 
         const urls = [
@@ -164,7 +165,9 @@ const App = () => {
         </div>
       </div>
       <div className="relative">
-        <UserProfile />
+        <div className="z-10 h-[68.5px] flex items-center justify-end font-bold text-3xl fixed xl:w-[calc(378px)] w-[calc(33%-48px)] fixed bg-white/30 backdrop-blur-sm pr-3">
+          <UserProfile />
+        </div>
         <Statistics />
       </div>
     </div>

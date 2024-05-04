@@ -32,7 +32,7 @@ export const getCurrentSpendingLimit = (state: RootState) => {
 export const getBalance = (state: RootState) => {
   let balance = 0
 
-  state.transaction.values.forEach(t => {
+  state.transaction.values?.forEach(t => {
     if (t.type === "income") {
       balance += Number(t.price)
     } else {
@@ -46,7 +46,7 @@ export const getBalance = (state: RootState) => {
 export const getIncome = (state: RootState) => {
   let income = 0
 
-  state.transaction.values.forEach(t => {
+  state.transaction.values?.forEach(t => {
     if (t.type === "income" && getMonthDates(new Date(state.transaction.currentDate)).some(d => format(d, "MM-yy") === format(t.time, 'MM-yy'))) {
       income += Number(t.price)
     }
@@ -58,7 +58,7 @@ export const getIncome = (state: RootState) => {
 export const getSpending = (state: RootState) => {
   let spending = 0
 
-  state.transaction.values.forEach(t => {
+  state.transaction.values?.forEach(t => {
     if (t.type === "spending" && getMonthDates(new Date(state.transaction.currentDate)).some(d => format(d, "MM-yy") === format(t.time, 'MM-yy'))) {
       spending += Number(t.price)
     }

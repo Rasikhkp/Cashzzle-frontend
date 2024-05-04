@@ -167,7 +167,7 @@ const CreateTransaction = () => {
                                 <SelectValue placeholder="Empty..." />
                               </SelectTrigger>
                               <SelectContent>
-                                {categories.map((c: any, i) => (
+                                {categories?.map((c: any, i) => (
                                   <SelectItem value={c.id} key={i}>{c.name}</SelectItem>
                                 ))}
                               </SelectContent>

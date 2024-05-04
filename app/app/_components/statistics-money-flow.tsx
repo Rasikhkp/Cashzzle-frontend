@@ -52,81 +52,100 @@ const StatisticsMoneyFlow = () => {
   };
 
   const getMoneyFlow = () => {
-    const firstTransactionDate = new Date(transactions[0].time);
+    if (transactions[0]) {
+      const firstTransactionDate = new Date(transactions[0].time);
 
-    const dates = eachDayOfInterval({
-      start: firstTransactionDate,
-      end: new Date(),
-    });
+      const dates = eachDayOfInterval({
+        start: firstTransactionDate,
+        end: new Date(),
+      });
 
-    const income = dates.map((date) => {
-      return {
-        x: date,
-        y: transactions
+      const income = dates.map((date) => {
+        return {
+          x: date,
+          y: transactions
+            .filter(
+              (t) =>
+                (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
+                &&
+                t.type === "income",
+            )
+            .map((t) => Number(t.price))
+            .reduce((acc, curr) => acc + curr, 0)
+        };
+      });
+
+      const spending = dates.map((date) => {
+        return {
+          x: date,
+          y: transactions
+            .filter(
+              (t) =>
+                (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
+                &&
+                t.type === "spending"
+
+            )
+            .map((t) => Number(t.price))
+            .reduce((acc, curr) => acc + curr, 0)
+        };
+      });
+
+      let balanceVal = 0;
+
+      const balance = dates.map((date) => {
+        balanceVal += transactions
           .filter(
             (t) =>
-              (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
-              &&
-              t.type === "income",
+              format(new Date(t.time), "dd-MM-yyyy") ===
+              format(date, "dd-MM-yyyy"),
           )
-          .map((t) => Number(t.price))
-          .reduce((acc, curr) => acc + curr, 0),
-      };
-    });
-
-    const spending = dates.map((date) => {
-      return {
-        x: date,
-        y: transactions
-          .filter(
-            (t) =>
-              (format(new Date(t.time), "dd-MM-yyyy") === format(date, "dd-MM-yyyy"))
-              &&
-              t.type === "spending"
-
+          .reduce(
+            (acc, curr) =>
+              curr.type === "income"
+                ? acc + Number(curr.price)
+                : acc - Number(curr.price),
+            0,
           )
-          .map((t) => Number(t.price))
-          .reduce((acc, curr) => acc + curr, 0),
-      };
-    });
 
-    let balanceVal = 0;
+        return {
+          x: date,
+          y: balanceVal,
+        };
+      });
 
-    const balance = dates.map((date) => {
-      balanceVal += transactions
-        .filter(
-          (t) =>
-            format(new Date(t.time), "dd-MM-yyyy") ===
-            format(date, "dd-MM-yyyy"),
-        )
-        .reduce(
-          (acc, curr) =>
-            curr.type === "income"
-              ? acc + Number(curr.price)
-              : acc - Number(curr.price),
-          0,
-        );
+      return [
+        {
+          id: "income",
+          data: income,
+        },
+        {
+          id: "spending",
+          data: spending,
+        },
+        {
+          id: "balance",
+          data: balance,
+        },
+      ];
 
-      return {
-        x: date,
-        y: balanceVal,
-      };
-    });
+    } else {
+      return [
+        {
+          id: "income",
+          data: [{ x: new Date(), y: null }],
+        },
+        {
+          id: "spending",
+          data: [{ x: new Date(), y: null }],
+        },
+        {
+          id: "balance",
+          data: [{ x: new Date(), y: null }],
+        },
+      ];
 
-    return [
-      {
-        id: "income",
-        data: income,
-      },
-      {
-        id: "spending",
-        data: spending,
-      },
-      {
-        id: "balance",
-        data: balance,
-      },
-    ];
+    }
   };
 
 
