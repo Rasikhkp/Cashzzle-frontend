@@ -18,7 +18,7 @@ const layout = ({
 
   return (
     <div className={`${poppins.className} flex min-h-screen flex-col justify-between gap-3`}>
-      <div className="w-full justify-between items-center py-3 px-6 flex">
+      <div className="w-full justify-between items-center py-5 px-10 flex">
         <Link href={"/app"} className="flex gap-3 group hover:underline">
           <ArrowLeftIcon className="w-4 group-hover:-translate-x-2 transition-all" />
           Back to app

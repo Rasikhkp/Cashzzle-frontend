@@ -9,7 +9,7 @@ import Categories from "./_components/categories";
 import UserProfile from "./_components/user-profile";
 import Statistics from "./_components/statistics";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getFromLS } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { fillTransactions } from "@/redux/features/transactions-slice";
@@ -138,15 +138,10 @@ const App = () => {
         dispatch(fillCategories(categoriesData))
         dispatch(fillSpendingLimits(spendingLimitsData))
       } catch (error: any) {
-        console.log(error)
-        if (error.response.data === 'Unauthorized') {
-          dispatch(setUser(null))
-          dispatch(fillTransactions(transactionsFromLS))
-          dispatch(fillCategories(categoriesFromLS))
-          dispatch(fillSpendingLimits(spendingLimitsFromLS))
-        } else {
-          console.log('Error fetching user data:', error);
-        }
+        dispatch(setUser(null))
+        dispatch(fillTransactions(transactionsFromLS))
+        dispatch(fillCategories(categoriesFromLS))
+        dispatch(fillSpendingLimits(spendingLimitsFromLS))
       }
     };
 
