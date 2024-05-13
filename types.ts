@@ -4,7 +4,7 @@ export type TransactionType = {
   description: string
   price: string
   type: "spending" | "income"
-  time: Date
+  time: Date | string
   userId?: string
 }
 

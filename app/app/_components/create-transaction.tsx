@@ -40,11 +40,12 @@ import { getCategories, getUser } from "@/redux/store";
 import { addTransaction } from "@/redux/features/transactions-slice";
 import { nanoid } from "nanoid";
 import { transaction } from "@/lib/transaction";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const CreateTransaction = () => {
   const [viewContent, setViewContent] = useState(false);
   const categories = useSelector(getCategories);
-  const user = useSelector(getUser)
+  const { user } = useKindeBrowserClient()
   const dispatch = useDispatch();
 
   const form = useForm<TCreateTransactionSchema>({
@@ -65,7 +66,7 @@ const CreateTransaction = () => {
       description: values.description,
       price: values.price,
       type: values.type,
-      time: new Date(),
+      time: new Date().toISOString(),
       userId: user ? user.id : undefined
     };
 

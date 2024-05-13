@@ -1,36 +1,19 @@
 import { SpendingLimitType, UserType } from "@/types";
 import axios from "axios";
 import { addToLS, deleteFromLS, updateLS, upsertLS } from "./utils";
-
-const opt = {
-  withCredentials: true
-}
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 export const spendingLimit = {
-  add: async (user: UserType | null, spendingLimit: SpendingLimitType) => {
+  delete: async (user: KindeUser | null, id: string) => {
     if (user) {
-      await axios.post("http://localhost:1234/api/transactions", spendingLimit, opt)
-    } else {
-      addToLS("spending-limits", spendingLimit)
-    }
-  },
-  delete: async (user: UserType | null, id: string) => {
-    if (user) {
-      await axios.delete("http://localhost:1234/api/spendingLimits/" + id, opt)
+      await axios.delete("/api/spendingLimit/" + id)
     } else {
       deleteFromLS("spending-limits", id)
     }
   },
-  update: async (user: UserType | null, id: string, spendingLimit: SpendingLimitType) => {
+  upsert: async (user: KindeUser | null, spendingLimit: SpendingLimitType) => {
     if (user) {
-      await axios.put("http://localhost:1234/api/spendingLimits/" + id, spendingLimit, opt)
-    } else {
-      updateLS("spending-limits", spendingLimit)
-    }
-  },
-  upsert: async (user: UserType | null, spendingLimit: SpendingLimitType) => {
-    if (user) {
-      await axios.put("http://localhost:1234/api/spendingLimits/", spendingLimit, opt)
+      await axios.put("/api/spendingLimit/", spendingLimit)
     } else {
       upsertLS("spending-limits", spendingLimit)
     }

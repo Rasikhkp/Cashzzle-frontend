@@ -9,6 +9,7 @@ import useConfirm from "@/hooks/useConfirm";
 import { getTransactions, getUser } from "@/redux/store";
 import { fillTransactions } from "@/redux/features/transactions-slice";
 import { category } from "@/lib/category";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const Category = ({
   icon,
@@ -21,7 +22,7 @@ const Category = ({
 }) => {
   const [options, setOptions] = useState(false);
   const [edit, setEdit] = useState(false);
-  const user = useSelector(getUser)
+  const { user } = useKindeBrowserClient()
   const categoryRef = useRef<HTMLDivElement>(null);
   const transactions = useSelector(getTransactions);
   const dispatch = useDispatch();

@@ -32,7 +32,7 @@ const ChartLine = ({ data, month }: { data: any; month?: string }) => {
           tickRotation: !month ? 90 : 0,
         }}
         axisLeft={null}
-        enablePoints={false}
+        enablePoints={true}
         pointSize={10}
         enableGridX={false}
         pointColor={{ theme: "background" }}

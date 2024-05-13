@@ -22,6 +22,7 @@ import { useEffect, useRef } from "react";
 import useConfirm from "@/hooks/useConfirm";
 import { category } from "@/lib/category";
 import { getUser } from "@/redux/store";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const CategoriesCreateEdit = ({
   type,
@@ -35,7 +36,7 @@ const CategoriesCreateEdit = ({
   data?: any;
 }) => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser)
+  const { user } = useKindeBrowserClient()
   const categoryCreateEditRef = useRef<HTMLDivElement>(null);
   const [Dialog, confirm] = useConfirm(
     "Are you sure?",

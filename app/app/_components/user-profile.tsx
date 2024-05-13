@@ -1,54 +1,36 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { deleteFromLS, getFromLS } from "@/lib/utils";
-import { setUser } from "@/redux/features/user-slice";
-import { getUser } from "@/redux/store";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { useRouter } from "next/navigation";
 
 const UserProfile = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLButtonElement | null>(null);
-  const dispatch = useDispatch()
-  const user = useSelector(getUser)
+  const router = useRouter()
+  const { user } = useKindeBrowserClient()
   console.log("user di user-profile", user)
-  const router = useRouter();
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
-    const userString = localStorage.getItem("active-user")
-    dispatch(setUser(userString && JSON.parse(userString)))
 
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-
-  const logout = async () => {
-    const {
-      data: { success, message },
-    } = await axios.get("http://localhost:1234/api/auth/logout", {
-      withCredentials: true,
-    });
-
-    if (success) {
-      localStorage.removeItem("active-user")
-      dispatch(setUser(null))
-      router.push("/login");
-    } else {
-      console.log(message);
-    }
-  };
 
   const handleClickOutside = (e: MouseEvent) => {
     if (profileRef.current && !profileRef.current?.contains(e.target as Node)) {
       setShowProfile(false);
     }
   };
+
+  const login = () => {
+    router.push("api/auth/login?post_login_redirect_url=/app")
+  }
 
   return (
     <>
@@ -69,13 +51,13 @@ const UserProfile = () => {
           </Avatar>
         </button>
       ) : (
-        <Link
-          href={'/login'}
+        <button
+          onClick={login}
           type="button"
           className="py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-200 active:bg-gray-300 transition-all"
         >
           Login
-        </Link>
+        </button>
       )}
 
       <AnimatePresence>
@@ -98,20 +80,18 @@ const UserProfile = () => {
               </Avatar>
 
               <div>
-                <div className="text-sm mb-1 text-gray-800">{user?.name}</div>
+                <div className="text-sm mb-1 text-gray-800">{`${user?.given_name} ${user?.family_name}`}</div>
                 <div className="text-xs text-xs text-gray-600">
                   {user?.email}
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={logout}
+            <LogoutLink
               className="w-full flex gap-4 mt-2 items-center hover:bg-gray-200 rounded-lg active:bg-gray-300 transition-all px-4 py-3 text-sm"
             >
               <ArrowLeftStartOnRectangleIcon className="w-4" />
               Log out
-            </button>
+            </LogoutLink>
           </motion.div>
         )}
       </AnimatePresence>

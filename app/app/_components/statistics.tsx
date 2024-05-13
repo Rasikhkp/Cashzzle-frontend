@@ -26,7 +26,6 @@ type PieChartData = {
 const Statistics = () => {
   const [open, setOpen] = useState(false);
   const transactions = useSelector(getTransactions)
-  console.log('transactions di statistics', transactions)
 
   const openView = () => {
     if (!open) {

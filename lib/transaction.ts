@@ -1,29 +1,26 @@
 import { TransactionType, UserType } from "@/types";
 import axios from "axios";
 import { addToLS, deleteFromLS, updateLS } from "./utils";
-
-const opt = {
-  withCredentials: true
-}
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 export const transaction = {
-  add: async (user: UserType | null, transaction: TransactionType) => {
+  add: async (user: KindeUser | null, transaction: TransactionType) => {
     if (user) {
-      await axios.post("http://localhost:1234/api/transactions", transaction, opt)
+      await axios.post("/api/transactions", transaction)
     } else {
       addToLS("transactions", transaction)
     }
   },
-  delete: async (user: UserType | null, id: string) => {
+  delete: async (user: KindeUser | null, id: string) => {
     if (user) {
-      await axios.delete("http://localhost:1234/api/transactions/" + id, opt)
+      await axios.delete("/api/transactions/" + id)
     } else {
       deleteFromLS("transactions", id)
     }
   },
-  update: async (user: UserType | null, id: string, transaction: TransactionType) => {
+  update: async (user: KindeUser | null, id: string, transaction: TransactionType) => {
     if (user) {
-      await axios.put("http://localhost:1234/api/transactions/" + id, transaction, opt)
+      await axios.put("/api/transactions/" + id, transaction)
     } else {
       updateLS("transactions", transaction)
     }
