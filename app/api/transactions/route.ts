@@ -20,7 +20,6 @@ export const GET = async (req: NextRequest) => {
 export const POST = async (req: NextRequest) => {
   try {
     const transaction = await req.json()
-    console.log("transaction", transaction)
 
     await prisma.transaction.create({
       data: transaction

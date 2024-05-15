@@ -59,7 +59,6 @@ const CreateTransaction = () => {
   });
 
   const onSubmit = (values: TCreateTransactionSchema) => {
-    console.log(values);
     const data = {
       id: nanoid(),
       categoryId: values.category,

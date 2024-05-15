@@ -21,7 +21,6 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   try {
     const spendingLimit = await req.json()
-    console.log("spendingLimit", spendingLimit)
 
     await prisma.spendingLimit.upsert({
       where: { date: spendingLimit.date },

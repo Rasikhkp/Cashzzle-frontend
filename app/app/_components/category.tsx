@@ -1,4 +1,4 @@
-import { deleteFromLS, setLS } from "@/lib/utils";
+import { setLS } from "@/lib/utils";
 import { deleteCategory } from "@/redux/features/categories-slice";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";

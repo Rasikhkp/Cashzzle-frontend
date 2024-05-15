@@ -6,29 +6,27 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import food from "@/public/icons/food.svg";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  deleteFromLS,
   format12HourTime,
   formatToRupiah,
-  getDayAndDate,
 } from "@/lib/utils";
 import useConfirm from "@/hooks/useConfirm";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTransaction } from "@/redux/features/transactions-slice";
 import TransactionEdit from "./transaction-edit";
-import CreateTransaction from "./create-transaction";
 import { getCategories, getUser } from "@/redux/store";
 import noImage from "@/public/icons/no_image.svg";
 import { transaction } from "@/lib/transaction";
 import { TransactionType } from "@/types";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const Transaction = ({ data }: { data: TransactionType }) => {
   const [openOption, setOpenOption] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const user = useSelector(getUser)
+  const { user } = useKindeBrowserClient()
+
   const [Dialog, confirm] = useConfirm(
     "Are you sure?",
     "This action will remove you transaction forever ever okay?!",

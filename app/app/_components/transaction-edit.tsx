@@ -24,28 +24,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import CreateTransaction from "./create-transaction";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
   TCreateTransactionSchema,
   createTransactionSchema,
 } from "@/lib/schema";
-import { nanoid } from "nanoid";
 import {
-  addTransaction,
   updateTransaction,
 } from "@/redux/features/transactions-slice";
-import { addToLS, updateLS } from "@/lib/utils";
-import { getCategories, getUser } from "@/redux/store";
+import { getCategories } from "@/redux/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { transaction } from "@/lib/transaction";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const TransactionEdit = ({ setOpenEdit, data }: any) => {
   const categories = useSelector(getCategories);
   const dispatch = useDispatch();
-  const user = useSelector(getUser)
+  const { user } = useKindeBrowserClient()
 
   const form = useForm<TCreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
@@ -58,7 +54,6 @@ const TransactionEdit = ({ setOpenEdit, data }: any) => {
   });
 
   const onSubmit = (values: TCreateTransactionSchema) => {
-    console.log(values);
     const newData = {
       id: data.id,
       categoryId: values.category,

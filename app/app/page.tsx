@@ -10,11 +10,10 @@ import UserProfile from "./_components/user-profile";
 import Statistics from "./_components/statistics";
 import axios from "axios";
 import { useEffect } from "react";
-import { getFromLS, setLS } from "@/lib/utils";
+import { getFromLS } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { fillTransactions } from "@/redux/features/transactions-slice";
 import { fillCategories } from "@/redux/features/categories-slice";
-import { setUser } from "@/redux/features/user-slice";
 import { fillSpendingLimits } from "@/redux/features/spending-limit-slice";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
@@ -31,7 +30,6 @@ const getTransactionsCategoriesSpendingLimits = async (urls: string[]) => {
 }
 
 const fillTransactionsCategoriesSpendingLimits = async (urls: string[], data: object[]) => {
-  console.log("data", data)
   try {
     const axiosPromises = urls.map((url, i) => axios.post(url, data[i], { withCredentials: true }));
 
@@ -47,13 +45,11 @@ const fillTransactionsCategoriesSpendingLimits = async (urls: string[], data: ob
 const App = () => {
   const dispatch = useDispatch()
   const { user } = useKindeBrowserClient()
-  console.log("user di app", user)
 
   useEffect(() => {
     const fetchData = async () => {
 
       if (!user) {
-        console.log("tidak ada user")
         const transactionsFromLS = getFromLS("transactions")
         const categoriesFromLS = getFromLS("categories")
         const spendingLimitsFromLS = getFromLS("spending-limits")
@@ -64,11 +60,7 @@ const App = () => {
 
       } else {
 
-        console.log("user ada")
-
         try {
-
-          console.log("masuk try")
           const urls = [
             '/api/transactions?userId=' + user.id,
             '/api/categories?userId=' + user.id,
@@ -79,10 +71,6 @@ const App = () => {
           let transactionsData = responses[0].data.message
           let categoriesData = responses[1].data.message
           let spendingLimitsData = responses[2].data.message
-
-          console.log("transactionsData", transactionsData)
-          console.log("categoriesData", categoriesData)
-          console.log("spendingLimitsData", spendingLimitsData)
 
           if (!transactionsData[0] && !categoriesData[0] && !spendingLimitsData[0]) {
 
@@ -101,13 +89,7 @@ const App = () => {
               categories,
               spendingLimits
             ]
-
-            console.log("transactionsForData", transactions)
-            console.log("categoriesForData", categories)
-            console.log("spendingLimitsForData", spendingLimits)
-
             const responses = await fillTransactionsCategoriesSpendingLimits(urls, data) as any
-            console.log('filled responses', responses)
 
             transactionsData = responses[0].data.message
             categoriesData = responses[1].data.message

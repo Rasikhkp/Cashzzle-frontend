@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 
-export const PUT = async (req: NextRequest, { params }: { params: { userId: string } }) => {
+export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
-    const userId = params.userId
+    const id = params.id
     const transaction = await req.json()
 
     await prisma?.transaction.update({
-      where: { userId },
+      where: { id },
       data: transaction
     })
 
