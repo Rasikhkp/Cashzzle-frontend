@@ -13,7 +13,7 @@ const Home = () => {
 
       <main className="flex flex-col flex-1 justify-center items-center h-40">
         <p className={`${garamond.className} text-5xl font-bold`}>
-          Your Key to Smarter Spending and Saving.
+          Your Key to Smarter Spending and Saving. Anjay
         </p>
         <p
           className={`${garamond.className} text-lg text-center w-[556px] my-11 font-medium`}
